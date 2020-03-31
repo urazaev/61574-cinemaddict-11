@@ -31,7 +31,7 @@ const createMenuTemplate = () => {
     <li><a href="#" class="sort__button">Sort by rating</a></li>
   </ul>
   `);
-}
+};
 
 const createFilmCardTemplate = () => {
   return (`
@@ -263,15 +263,15 @@ const createFilmPopupTemplate = () => {
   `);
 };
 
-const render = (template, container, position = 'beforeEnd') => {
+const render = (template, container, position = `beforeEnd`) => {
   return (
     container.insertAdjacentHTML(position, template)
-  )
+  );
 };
 
-const headerNode = document.querySelector('.header');
-const mainNode = document.querySelector('.main');
-const footerNode = document.querySelector('.footer');
+const headerNode = document.querySelector(`.header`);
+const mainNode = document.querySelector(`.main`);
+const footerNode = document.querySelector(`.footer`);
 
 const filmCardsLongListNodes = new Array(CARDS_COUNT)
   .fill(``)
@@ -290,4 +290,4 @@ const filmCardsShortListNodes = new Array(RATES_CARDS_COUNT)
 render(createUserProfileTemplate(), headerNode);
 render(createMenuTemplate(), mainNode);
 render(createFilmListTemplate(filmCardsLongListNodes, filmCardsShortListNodes, createShowMoreButtonTemplate()), mainNode);
-render(createFilmPopupTemplate(), footerNode, 'afterEnd');
+render(createFilmPopupTemplate(), footerNode, `afterEnd`);
