@@ -1,9 +1,9 @@
-import {createFilmListTemplate} from "./filmListTemplate";
-import {createFilmPopupTemplate} from "./filmPopupTemplate";
-import {createMenuTemplate} from "./menuTemplate";
-import {createShowMoreButtonTemplate} from "./showMoreButtonTemplate";
-import {createUserProfileTemplate} from "./userProfileTemplate";
-import {createFilmCardTemplate} from "./filmCardTemplate";
+import {createFilmListTemplate} from "./components/filmListTemplate";
+import {createFilmPopupTemplate} from "./components/filmPopupTemplate";
+import {createMenuTemplate} from "./components/menuTemplate";
+import {createShowMoreButtonTemplate} from "./components/showMoreButtonTemplate";
+import {createUserProfileTemplate} from "./components/userProfileTemplate";
+import {createFilmCardTemplate} from "./components/filmCardTemplate";
 
 const CARDS_COUNT = 5;
 const RATES_CARDS_COUNT = 2;
