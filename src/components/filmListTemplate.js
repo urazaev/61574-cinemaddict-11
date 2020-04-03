@@ -1,5 +1,4 @@
-export
-const createFilmListTemplate = (longListCards, shortListCards, showMoreButton) => {
+export const createFilmListTemplate = (longListCards, shortListCards, showMoreButton) => {
   return `
     <section class="films">
     <section class="films-list">
