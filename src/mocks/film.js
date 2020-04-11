@@ -31,7 +31,7 @@ const generateDescription = () => {
 };
 
 const generateGenres = () => {
-  return generateRandomArrayPiece(MAX_VALUE, GENRES)
+  return generateRandomArrayPiece(MAX_VALUE, GENRES);
 };
 
 const generateActors = () => {
