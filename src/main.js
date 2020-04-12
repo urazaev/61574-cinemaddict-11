@@ -1,12 +1,31 @@
-import {createFilmListTemplate} from "./components/filmListTemplate";
-import {createFilmPopupTemplate} from "./components/filmPopupTemplate";
-import {createMenuTemplate} from "./components/menuTemplate";
-import {createShowMoreButtonTemplate} from "./components/showMoreButtonTemplate";
-import {createUserProfileTemplate} from "./components/userProfileTemplate";
-import {createFilmCardTemplate} from "./components/filmCardTemplate";
+import {createUserProfileTemplate} from './components/user-profile-template';
+import {createMenuTemplate} from './components/menu-template';
+import {createFilmListsTemplate} from './components/film-lists-template';
+import {createShowMoreButtonTemplate} from './components/show-more-button-template';
+import {createFilmPopupTemplate} from './components/film-popup-template';
+import {CARDS_COUNT, COMMENTS_COUNT, TOTAL_FILM_COUNT} from './mocks/constants';
+import {createAdditionalFilms} from './components/film-common-template';
+import {generateFilms} from "./mocks/film";
+import {generateFilters} from './mocks/filters';
+import {getRandomArrayItem} from './mocks/utils';
+import {generateComments} from "./mocks/comment";
 
-const CARDS_COUNT = 5;
-const RATES_CARDS_COUNT = 2;
+const headerNode = document.querySelector(`.header`);
+const mainNode = document.querySelector(`.main`);
+const footerNode = document.querySelector(`.footer`);
+
+const films = generateFilms(TOTAL_FILM_COUNT);
+
+const footerStatistic = footerNode.querySelector(`.footer__statistics`);
+
+footerStatistic.innerText = `${films.length} movies inside`;
+
+const filters = generateFilters(films);
+const randomFilm = getRandomArrayItem(films);
+const comments = generateComments(COMMENTS_COUNT);
+const watchedFilms = filters.history;
+
+let startPointSlice = 0;
 
 const render = (template, container, position = `beforeEnd`) => {
   return (
@@ -14,26 +33,26 @@ const render = (template, container, position = `beforeEnd`) => {
   );
 };
 
+render(createUserProfileTemplate(watchedFilms), headerNode);
 
-const headerNode = document.querySelector(`.header`);
-const mainNode = document.querySelector(`.main`);
-const footerNode = document.querySelector(`.footer`);
+render(createMenuTemplate(films, filters, `all movies`), mainNode);
+render(createFilmListsTemplate(films, createShowMoreButtonTemplate()), mainNode);
 
-const filmCardsLongListNodes = new Array(CARDS_COUNT)
-  .fill(``)
-  .map(() => {
-    return createFilmCardTemplate();
-  })
-  .join(``);
+const loadMoreButton = mainNode.querySelector(`.films-list__show-more`);
+const commonFilmList = mainNode.querySelector(`.films-list__container`);
 
-const filmCardsShortListNodes = new Array(RATES_CARDS_COUNT)
-  .fill(``)
-  .map(() => {
-    return createFilmCardTemplate();
-  })
-  .join(``);
+loadMoreButton.addEventListener(`click`, () => {
+  startPointSlice = startPointSlice <= TOTAL_FILM_COUNT - CARDS_COUNT
+    ? startPointSlice + CARDS_COUNT
+    : TOTAL_FILM_COUNT;
 
-render(createUserProfileTemplate(), headerNode);
-render(createMenuTemplate(), mainNode);
-render(createFilmListTemplate(filmCardsLongListNodes, filmCardsShortListNodes, createShowMoreButtonTemplate()), mainNode);
-render(createFilmPopupTemplate(), footerNode, `afterEnd`);
+  if (startPointSlice + CARDS_COUNT > TOTAL_FILM_COUNT) {
+    loadMoreButton.remove();
+  }
+
+  const addCardTemplates = createAdditionalFilms(films, startPointSlice);
+
+  render(addCardTemplates, commonFilmList);
+});
+
+render(createFilmPopupTemplate(randomFilm, comments), footerNode, `afterEnd`);
