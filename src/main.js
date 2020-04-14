@@ -11,7 +11,7 @@ const RATES_CARDS_COUNT = 2;
 const render = (template, container, position = `beforeEnd`) => {
   return (
     container.insertAdjacentHTML(position, template)
-  );
+  );å
 };
 
 
