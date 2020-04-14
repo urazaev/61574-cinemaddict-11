@@ -12,10 +12,9 @@ import {
   ACTORS,
   WRITERS,
   INITIAL_DESCRIPTION_TEXT,
-  COMMENTS_COUNT
-} from "./constants";
-
-import {getRandomArrayItem, generateRandomArrayPiece, getRandomIntegerNumber, getRandomBoolean} from './utils';
+  COMMENTS_COUNT,
+} from './constants';
+import {getRandomArrayItem, generateRandomArrayPiece, getRandomIntegerNumber, getRandomBoolean} from '../utilities/utilities';
 import {generateComments} from "./comment";
 
 const getRatingInteger = (min, max) => {
@@ -26,8 +25,8 @@ const getRatingInteger = (min, max) => {
 const getRating = () => getRatingInteger(Rating.MIN, Rating.MAX);
 
 const generateDescription = () => {
-  const descriptionPieces = INITIAL_DESCRIPTION_TEXT.split(` .`);
-  return generateRandomArrayPiece(MAX_VALUE, descriptionPieces.join(``));
+  const descriptionPieces = INITIAL_DESCRIPTION_TEXT.split(`. `);
+  return generateRandomArrayPiece(MAX_VALUE, descriptionPieces).join(``);
 };
 
 const generateGenres = () => {
@@ -41,59 +40,10 @@ const generateActors = () => {
 };
 
 const generateWriters = () => {
-  const genresLenght = getRandomIntegerNumber(1, MAX_VALUE);
-  const genresStartPiece = getRandomIntegerNumber(1, WRITERS.length - genresLenght);
-  return WRITERS.slice(genresStartPiece, genresStartPiece + genresLenght).join(` ,`);
+  const writersLength = getRandomIntegerNumber(1, MAX_VALUE);
+  const writersStartPiece = getRandomIntegerNumber(1, WRITERS.length - writersLength);
+  return WRITERS.slice(writersStartPiece, writersStartPiece + writersLength).join(`, `);
 };
-
-// const generateFilm = () => {
-//   return {
-//     "id": "0",
-//     "film_info": {
-//       "title": "A Shark Who Bought The Carpet",
-//       "alternative_title": "A Lion Who Sold The Void",
-//       "total_rating": 5.4,
-//       "poster": "images/posters/made-for-each-other.png",
-//       "age_rating": 6,
-//       "director": "Quentin Tarantino",
-//       "writers": [],
-//       "actors": [
-//         "Robert De Niro",
-//         "Matt Damon",
-//         "Tom Hanks",
-//         "Takeshi Kitano",
-//         "Christian Bale",
-//         "Gary Oldman",
-//         "Harrison Ford",
-//         "Ralph Fiennes"
-//       ],
-//       "release": {
-//         "date": "2014-03-11T10:55:50.535Z",
-//         "release_country": "Italy"
-//       },
-//       "runtime": 186,
-//       "genre": [
-//         "Action",
-//         "Sci-Fi"
-//       ],
-//       "description": "Oscar-winning film, from the creators of timeless classic \"Nu, Pogodi!\" and \"Alice in Wonderland\", with the best fight scenes since Bruce Lee."
-//     },
-//     "user_details": {
-//       "personal_rating": 5,
-//       "watchlist": false,
-//       "already_watched": getRandomBoolean(),
-//       "watching_date": "2020-04-08T08:28:00.929Z",
-//       "favorite": false
-//     },
-//     "comments": [
-//       "0",
-//       "1",
-//       "2",
-//       "3",
-//       "4"
-//     ]
-//   }
-// };
 
 const generateFilm = () => {
   return {
