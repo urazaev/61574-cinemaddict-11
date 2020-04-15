@@ -1,4 +1,4 @@
-import {createFilmCardTemplate} from './film-card-template';
+import {createFilmCardTemplate} from './film-card';
 import {CARDS_COUNT} from '../mocks/constants';
 
 const createCommonFilmTemplate = (films) => {

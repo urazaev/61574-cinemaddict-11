@@ -1,5 +1,5 @@
 import RatingForm from "./rating-form";
-import CommentsComponent from "./comments-component-template";
+import CommentsComponent from "./comments";
 import CommentForm from "./comment-form";
 import {RenderPosition} from "../mocks/constants";
 import {createElement, render} from "../utilities/utilities";
