@@ -17,7 +17,7 @@ export default class FilmListTemplate {
   }
 
   getTemplate() {
-    return createFilmListsTemplate();
+    return createFilmLists();
   }
 
   getElement() {
