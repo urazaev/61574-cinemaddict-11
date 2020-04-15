@@ -11,13 +11,13 @@ const createFilmListsTemplate = () => {
   );
 };
 
-export default class FilmListTemplate {
+export default class FilmsList {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createFilmLists();
+    return createFilmListsTemplate();
   }
 
   getElement() {
