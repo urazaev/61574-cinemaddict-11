@@ -1,5 +1,5 @@
 import {RATES_CARDS_COUNT} from '../mocks/constants';
-import {createElement} from "../utilities/utilities";
+import AbstractComponent from "./abstract-component";
 
 const sortData = (a, b, type) => {
   if (a[type] < b[type]) {
@@ -17,8 +17,6 @@ const createTopFilms = (films, type) => {
       return sortData(a, b, type);
     })
     .slice(0, RATES_CARDS_COUNT);
-
-
 };
 
 const createTopTemplate = (films, type) => {
@@ -35,22 +33,15 @@ const createTopTemplate = (films, type) => {
   );
 };
 
-export default class TopFilm {
+export default class TopFilm extends AbstractComponent {
   constructor(films, type) {
-    this._element = null;
+    super();
     this._films = films;
     this._type = type;
   }
 
   getTemplate() {
     return createTopTemplate(this._films, this._type);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
   }
 
   getTopFilms() {

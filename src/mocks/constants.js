@@ -1,10 +1,3 @@
-import {getRandomIntegerNumber} from "../utilities/utilities";
-
-const TopFilmTypes = {
-  RATING: `rating`,
-  COMMENTS: `comments`
-};
-
 const FILM_NAMES = [
   `Lock, Stock and Two Smoking Barrels`,
   `The Hateful Eight`,
@@ -38,6 +31,11 @@ const Year = {
   MAX: 2000
 };
 
+const TopFilmType = {
+  RATING: `rating`,
+  COMMENTS: `comments`
+};
+
 const MAX_VALUE = 3;
 
 const MAX_AGE_RATING = 21;
@@ -60,7 +58,7 @@ const INITIAL_FILTERS_STATE = {
 };
 
 const CARDS_COUNT = 5;
-const TOTAL_FILM_COUNT = 0;
+const TOTAL_FILM_COUNT = 12;
 const RATES_CARDS_COUNT = 2;
 
 const GENRES = [
@@ -171,37 +169,6 @@ const RenderPosition = {
 
 const MAX_FILM_SCORE = 9;
 
-const RANDOM_SCORE = getRandomIntegerNumber(1, MAX_FILM_SCORE);
-
 const CLICKABLE_ITEMS = [`.film-card__poster`, `.film-card__title`, `.film-card__comments`];
 
-export {
-  RenderPosition,
-  TopFilmTypes,
-  CLICKABLE_ITEMS,
-  RANDOM_SCORE,
-  MAX_FILM_SCORE,
-  MAX_AGE_RATING,
-  COMMENTS_EMODJIES,
-  COMMENTS_COUNT,
-  COMMENTS_TIME_RANGE,
-  COMMENTS_AUTHORS,
-  COMMENTS_TEXTS,
-  Year,
-  MAX_VALUE,
-  Duration,
-  Rating,
-  COUTRIES,
-  DIRECTORS,
-  ACTORS,
-  WRITERS,
-  FILM_NAMES,
-  POSTERS,
-  CARDS_COUNT,
-  USER_STATUSES,
-  INITIAL_FILTERS_STATE,
-  TOTAL_FILM_COUNT,
-  RATES_CARDS_COUNT,
-  INITIAL_DESCRIPTION_TEXT,
-  GENRES
-};
+export {RenderPosition, TopFilmType, CLICKABLE_ITEMS, MAX_FILM_SCORE, MAX_AGE_RATING, COMMENTS_EMODJIES, COMMENTS_COUNT, COMMENTS_TIME_RANGE, COMMENTS_AUTHORS, COMMENTS_TEXTS, Year, MAX_VALUE, Duration, Rating, COUTRIES, DIRECTORS, ACTORS, WRITERS, FILM_NAMES, POSTERS, CARDS_COUNT, USER_STATUSES, INITIAL_FILTERS_STATE, TOTAL_FILM_COUNT, RATES_CARDS_COUNT, INITIAL_DESCRIPTION_TEXT, GENRES};

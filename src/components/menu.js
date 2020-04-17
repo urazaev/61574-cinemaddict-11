@@ -1,5 +1,5 @@
 import {createFilterTemplate} from './filter-template';
-import {createElement} from '../utilities/utilities';
+import AbstractComponent from "./abstract-component";
 
 const createFiltersTemplate = (filters) => {
   const filtersKey = Object.keys(filters);
@@ -13,28 +13,20 @@ const createFiltersTemplate = (filters) => {
 const createMenuTemplate = (films, filters) => {
   return (
     `<nav class="main-navigation">
-      ${createFiltersTemplate(filters)}
-      <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
+        ${createFiltersTemplate(filters)}
+        <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
     </nav>`
   );
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(films, filters) {
-    this._element = null;
+    super();
     this._films = films;
     this._filters = filters;
   }
 
   getTemplate() {
     return createMenuTemplate(this._films, this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 }
