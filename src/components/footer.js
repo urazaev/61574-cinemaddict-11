@@ -3,11 +3,12 @@ import AbstractComponent from "./abstract-component";
 const createFooter = (filmsCount) => {
   return (`
     <footer class="footer">
-    <section class="footer__logo logo logo--smaller">Cinemaddict</section>
-    <section class="footer__statistics">
+      <section class="footer__logo logo logo--smaller">Cinemaddict</section>
+      <section class="footer__statistics">
         <p>${filmsCount} movies inside</p>
-  </section>
-  </footer>`);
+      </section>
+    </footer>
+  `);
 };
 
 export default class Footer extends AbstractComponent {
@@ -19,6 +20,4 @@ export default class Footer extends AbstractComponent {
   getTemplate() {
     return createFooter(this._filmsCount);
   }
-
 }
-

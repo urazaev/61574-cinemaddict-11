@@ -1,19 +1,21 @@
+import moment from "moment";
 import RatingForm from "./rating-form";
 import Comments from "./comments";
 import CommentForm from "./comment-form";
+import AbstractSmartComponent from "./abstract-smart-component";
 import {RenderPosition} from "../mocks/constants";
 import {render} from "../utilities/render";
-import AbstractComponent from "./abstract-component";
+import {getFilmDuration} from "../utilities/utilities";
 
 const isCheckboxActive = (statement) => {
   return statement ? `checked` : ``;
 };
 
-const createFilmPopupTemplate = (film) => {
+const createFilmPopupTemplate = (film, options) => {
   const {
     filmName,
     rating,
-    releaseYear,
+    releaseDate,
     movieDuration,
     genres,
     description,
@@ -22,15 +24,22 @@ const createFilmPopupTemplate = (film) => {
     writers,
     actors,
     country,
+    posterUrl,
+  } = film;
+
+  const {
     isFavorite,
     isWatched,
-    isInWatchList,
-    posterUrl
-  } = film;
+    isInWatchList
+  } = options;
+
+  const preparedReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
 
   const watchedLabel = isWatched ? `Already watched` : `Add to watched`;
   const watchListLabel = isInWatchList ? `Remove from watchlist` : `Add to watchlist`;
   const favoritesLabel = isFavorite ? `Remove from favorites` : `Add to favorites`;
+
+  const preparedMovieDuration = getFilmDuration(movieDuration);
 
   return (
     `<section class="film-details">
@@ -73,11 +82,11 @@ const createFilmPopupTemplate = (film) => {
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${releaseYear}</td>
+                  <td class="film-details__cell">${preparedReleaseDate}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${movieDuration}</td>
+                  <td class="film-details__cell">${preparedMovieDuration}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>
@@ -112,23 +121,18 @@ const createFilmPopupTemplate = (film) => {
   );
 };
 
-export default class FilmPopup extends AbstractComponent {
+export default class FilmPopup extends AbstractSmartComponent {
   constructor(film, popupRenderPlace) {
     super();
     this._film = film;
     this.popupRenderPlace = popupRenderPlace;
-  }
 
-  getTemplate() {
-    return createFilmPopupTemplate(this._film);
-  }
+    this._isFilmFavorite = this._film.isFavorite;
+    this._isInWatchList = this._film.isInWatchList;
+    this._isWatched = this._film.isWatched;
 
-  renderFormElement() {
-    const ratingForm = this._film.isWatched && new RatingForm(this._film);
-    const commentsComponent = new Comments(this._film.comments);
-    const commentForm = new CommentForm();
-
-    FilmPopup.renderPopup(this.popupRenderPlace, this._element, ratingForm, commentsComponent, commentForm);
+    this._subscribeOnEvents();
+    this.renderFormElement();
   }
 
   static renderPopup(popupRenderPlace, filmPopup, ratingForm, commentsComponent, commentForm) {
@@ -138,5 +142,69 @@ export default class FilmPopup extends AbstractComponent {
     render(filmPopup, commentsComponent.getElement(), RenderPosition.BEFORE_END);
     render(commentsComponent.getElement(), commentForm.getElement(), RenderPosition.BEFORE_END);
     commentsComponent.getCommentsList(commentsComponent.getElement());
+  }
+
+  getTemplate() {
+    return createFilmPopupTemplate(this._film, {
+      isFavorite: this._isFilmFavorite,
+      isInWatchList: this._isInWatchList,
+      isWatched: this._isWatched
+    });
+  }
+
+  renderFormElement() {
+    if (this._isWatched) {
+      const ratingForm = new RatingForm(this._film);
+      const commentsComponent = new Comments(this._film.comments);
+      const commentForm = new CommentForm();
+
+      FilmPopup.renderPopup(this.popupRenderPlace, this._element, ratingForm, commentsComponent, commentForm);
+    }
+  }
+
+  rerender() {
+    super.rerender();
+
+    this.renderFormElement();
+  }
+
+  recoveryListeners() {
+    this._subscribeOnEvents();
+
+    this.setPopupCloseHandler(this._handler);
+  }
+
+  setPopupCloseHandler(handler) {
+    this._handler = handler;
+
+    this.getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
+  }
+
+  _subscribeOnEvents() {
+    const element = this.getElement();
+
+    element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, () => {
+        this._isInWatchList = !this._isInWatchList;
+
+        this.rerender();
+      });
+
+    element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, () => {
+        this._isWatched = !this._isWatched;
+
+        this.rerender();
+      });
+
+
+    element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, () => {
+        this._isFilmFavorite = !this._isFilmFavorite;
+
+        this.rerender();
+      });
   }
 }
