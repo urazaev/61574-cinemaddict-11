@@ -5,7 +5,7 @@ import AbstractComponent from "./abstract-component";
 const createRatingInputs = () => {
   const RANDOM_SCORE = getRandomIntegerNumber(1, MAX_FILM_SCORE);
 
-  const ratingMarksTemplate = new Array(MAX_FILM_SCORE)
+  return new Array(MAX_FILM_SCORE)
     .fill(``)
     .map((item, index) => {
       const template = `
@@ -15,8 +15,6 @@ const createRatingInputs = () => {
 
       return template;
     });
-
-  return ratingMarksTemplate;
 };
 
 const createRatingForm = (filmName, posterUrl) => {
