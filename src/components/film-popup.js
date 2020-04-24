@@ -1,8 +1,8 @@
 import moment from "moment";
+import AbstractComponent from "./abstract-component";
 import RatingForm from "./rating-form";
 import Comments from "./comments";
 import CommentForm from "./comment-form";
-import AbstractSmartComponent from "./abstract-smart-component";
 import {RenderPosition} from "../mocks/constants";
 import {render} from "../utilities/render";
 import {getFilmDuration} from "../utilities/utilities";
@@ -121,7 +121,7 @@ const createFilmPopupTemplate = (film, options) => {
   );
 };
 
-export default class FilmPopup extends AbstractSmartComponent {
+export default class FilmPopup extends AbstractComponent {
   constructor(film, popupRenderPlace) {
     super();
     this._film = film;
@@ -130,9 +130,6 @@ export default class FilmPopup extends AbstractSmartComponent {
     this._isFilmFavorite = this._film.isFavorite;
     this._isInWatchList = this._film.isInWatchList;
     this._isWatched = this._film.isWatched;
-
-    this._subscribeOnEvents();
-    this.renderFormElement();
   }
 
   static renderPopup(popupRenderPlace, filmPopup, ratingForm, commentsComponent, commentForm) {
@@ -162,49 +159,27 @@ export default class FilmPopup extends AbstractSmartComponent {
     }
   }
 
-  rerender() {
-    super.rerender();
-
-    this.renderFormElement();
-  }
-
-  recoveryListeners() {
-    this._subscribeOnEvents();
-
-    this.setPopupCloseHandler(this._handler);
-  }
-
   setPopupCloseHandler(handler) {
-    this._handler = handler;
-
     this.getElement()
       .querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, handler);
   }
 
-  _subscribeOnEvents() {
-    const element = this.getElement();
+  setWatchListButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, handler);
+  }
 
-    element.querySelector(`.film-details__control-label--watchlist`)
-      .addEventListener(`click`, () => {
-        this._isInWatchList = !this._isInWatchList;
+  setWatchedButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, handler);
+  }
 
-        this.rerender();
-      });
-
-    element.querySelector(`.film-details__control-label--watched`)
-      .addEventListener(`click`, () => {
-        this._isWatched = !this._isWatched;
-
-        this.rerender();
-      });
-
-
-    element.querySelector(`.film-details__control-label--favorite`)
-      .addEventListener(`click`, () => {
-        this._isFilmFavorite = !this._isFilmFavorite;
-
-        this.rerender();
-      });
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, handler);
   }
 }
