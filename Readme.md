@@ -1,12 +1,12 @@
 # Личный проект «Киноман» [![Build status][travis-image]][travis-url]
 
-* Студент: [Александр Уразаев](https://up.htmlacademy.ru/ecmascript/11/user/61574).
-* Наставник: [Сергей Рубец](https://htmlacademy.ru/profile/amator).
+* Студент: [Дарья Глаголь](https://up.htmlacademy.ru/ecmascript/10/user/303891).
+* Наставник: [Алексей Балесный](https://htmlacademy.ru/profile/id221665).
 
 ---
 
 _Не удаляйте и не изменяйте папки и файлы:_
-_`.editorconfig`, `.gitattributes`, `.travis.yml`._
+_`.editorconfig`, `.gitattributes`, `.gitignore`, `.travis.yml`, `package.json`._
 
 ---
 
@@ -48,5 +48,5 @@ git clone SSH-адрес_вашего_форка
 
 Репозиторий создан для обучения на интенсивном онлайн‑курсе «[Профессиональный JavaScript, уровень 2](https://htmlacademy.ru/intensive/ecmascript)» от [HTML Academy](https://htmlacademy.ru).
 
-[travis-image]: https://travis-ci.com/htmlacademy-ecmascript/61574-cinemaddict-11.svg?branch=master
-[travis-url]: https://travis-ci.com/htmlacademy-ecmascript/61574-cinemaddict-11
+[travis-image]: https://travis-ci.com/htmlacademy-ecmascript/303891-cinemaddict-10.svg?branch=master
+[travis-url]: https://travis-ci.com/htmlacademy-ecmascript/303891-cinemaddict-10

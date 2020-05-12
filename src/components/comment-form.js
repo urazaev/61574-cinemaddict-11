@@ -3,7 +3,7 @@ import {COMMENTS_EMODJIES} from '../mocks/constants';
 import {createElement} from '../utilities/render';
 
 const getEmojiLabel = (emoji) => {
-  return (`<img src="images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`);
+  return (`<img src="images/emoji/${emoji}.png" width="55" height="55" alt="${emoji}">`);
 };
 
 const getEmojiTemplate = () => {
@@ -52,19 +52,22 @@ export default class CommentForm extends AbstractComponent {
 
   _subscribeOnEvents() {
     const emojiLabel = this.getElement().querySelector(`.film-details__add-emoji-label`);
+
     this.getElement()
-      .querySelectorAll(`.film-details__emoji-label`)
+      .querySelectorAll(`.film-details__emoji-item`)
       .forEach((element) => {
-        element.addEventListener(`click`, (evt) => {
+        element.addEventListener(`change`, (evt) => {
           const target = evt.target;
-          const emojiType = target.dataset.emojiType;
-          const emoji = createElement(getEmojiLabel(emojiType));
+          const emojiType = target.value;
+          if (emojiType) {
+            const emoji = createElement(getEmojiLabel(emojiType));
 
-          if (emojiLabel.children.length) {
-            emojiLabel.children[0].remove();
+            if (emojiLabel.children.length) {
+              emojiLabel.children[0].remove();
+            }
+
+            emojiLabel.appendChild(emoji);
           }
-
-          emojiLabel.appendChild(emoji);
         });
       });
   }

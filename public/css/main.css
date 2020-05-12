@@ -212,16 +212,9 @@ button {
 .main-navigation {
   border-bottom: solid 2px var(--outline-color);
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-basis: 100%;
   font-size: var(--font-size-bigger);
   font-weight: 800;
-}
-
-.main-navigation__items {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
 }
 
 .main-navigation__item {
@@ -238,15 +231,13 @@ button {
   width: 1em;
 }
 
-.main-navigation__additional {
-  margin-left: auto;
-  padding: var(--vertical-gap) 0;
-  color: var(--text-color);
+.main-navigation__item--active {
+  color: var(--text-color-active);
 }
 
-.main-navigation__item--active,
-.main-navigation__additional--active {
-  color: var(--text-color-active);
+.main-navigation__item--additional {
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .result {
@@ -521,6 +512,15 @@ button {
   margin-right: auto;
 }
 
+@keyframes bounceInRight {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
 .details {
   overflow: hidden;
 }
@@ -533,6 +533,7 @@ button {
   left: 10%;
   z-index: 1;
   background-color: #212126;
+  animation: bounceInRight 0.3s;
   box-shadow: -3px 2px 13px 0 #141628;
   overflow-x: hidden;
   overflow-y: auto;
@@ -1074,4 +1075,38 @@ button {
   min-height: 300px;
   padding-top: 50px;
   padding-bottom: 50px;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+.shake {
+  animation: shake 0.6s;
+}
+.film-details__comment-input--error {
+  border: solid 3px red;
+}
+.film-details__user-rating-input:checked + .film-details__user-rating-label--error {
+  background-color: red;
+}
+.film-details__control-input:checked + .film-details__control-label--error {
+  opacity: 0.3;
 }

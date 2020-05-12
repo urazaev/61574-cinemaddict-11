@@ -1,20 +1,19 @@
+import he from 'he';
 import moment from "moment";
 import AbstractComponent from "./abstract-component";
 import RatingForm from "./rating-form";
-import Comments from "./comments";
-import CommentForm from "./comment-form";
-import {RenderPosition} from "../mocks/constants";
-import {render} from "../utilities/render";
 import {getFilmDuration} from "../utilities/utilities";
+import {CONTROL_LABEL_PREFIX, UserDetail} from "../mocks/constants";
 
 const isCheckboxActive = (statement) => {
   return statement ? `checked` : ``;
 };
 
-const createFilmPopupTemplate = (film, options) => {
+const createFilmPopupTemplate = (film, options, nodes) => {
   const {
     filmName,
     rating,
+    alternativeFilmName,
     releaseDate,
     movieDuration,
     genres,
@@ -33,6 +32,10 @@ const createFilmPopupTemplate = (film, options) => {
     isInWatchList
   } = options;
 
+  const {
+    ratingForm,
+  } = nodes;
+
   const preparedReleaseDate = moment(releaseDate).format(`DD MMMM YYYY`);
 
   const watchedLabel = isWatched ? `Already watched` : `Add to watched`;
@@ -40,6 +43,8 @@ const createFilmPopupTemplate = (film, options) => {
   const favoritesLabel = isFavorite ? `Remove from favorites` : `Add to favorites`;
 
   const preparedMovieDuration = getFilmDuration(movieDuration);
+
+  const renderFormTemplate = isWatched ? ratingForm : ``;
 
   return (
     `<section class="film-details">
@@ -50,7 +55,7 @@ const createFilmPopupTemplate = (film, options) => {
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${posterUrl}" alt="poster '${filmName}'">
+              <img class="film-details__poster-img" src="./${posterUrl}" alt="poster '${filmName}'">
 
               <p class="film-details__age">${ageRating}+</p>
             </div>
@@ -59,7 +64,7 @@ const createFilmPopupTemplate = (film, options) => {
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${filmName}</h3>
-                  <p class="film-details__title-original">Original: ${filmName}</p>
+                  <p class="film-details__title-original">Original: ${alternativeFilmName}</p>
                 </div>
 
                 <div class="film-details__rating">
@@ -93,9 +98,10 @@ const createFilmPopupTemplate = (film, options) => {
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">${genres.length > 1 ? `Genres` : `Genre`}</td>
+                  <td class="film-details__term">${genres && genres.length > 1 ? `Genres` : `Genre`}</td>
                   <td class="film-details__cell">
-                    ${genres.join(` `)}
+                    ${genres && genres.join(` `)}
+                  </td>
                 </tr>
               </table>
 
@@ -116,29 +122,23 @@ const createFilmPopupTemplate = (film, options) => {
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">${favoritesLabel}</label>
           </section>
         </div>
+        ${renderFormTemplate}
+
       </form>
     </section>`
   );
 };
 
 export default class FilmPopup extends AbstractComponent {
-  constructor(film, popupRenderPlace) {
+  constructor(film) {
     super();
     this._film = film;
-    this.popupRenderPlace = popupRenderPlace;
+
+    this._ratingForm = new RatingForm(this._film);
 
     this._isFilmFavorite = this._film.isFavorite;
     this._isInWatchList = this._film.isInWatchList;
     this._isWatched = this._film.isWatched;
-  }
-
-  static renderPopup(popupRenderPlace, filmPopup, ratingForm, commentsComponent, commentForm) {
-    if (ratingForm) {
-      render(filmPopup, ratingForm.getElement(), RenderPosition.BEFORE_END);
-    }
-    render(filmPopup, commentsComponent.getElement(), RenderPosition.BEFORE_END);
-    render(commentsComponent.getElement(), commentForm.getElement(), RenderPosition.BEFORE_END);
-    commentsComponent.getCommentsList(commentsComponent.getElement());
   }
 
   getTemplate() {
@@ -146,17 +146,9 @@ export default class FilmPopup extends AbstractComponent {
       isFavorite: this._isFilmFavorite,
       isInWatchList: this._isInWatchList,
       isWatched: this._isWatched
+    }, {
+      ratingForm: this._ratingForm.getTemplate(),
     });
-  }
-
-  renderFormElement() {
-    if (this._isWatched) {
-      const ratingForm = new RatingForm(this._film);
-      const commentsComponent = new Comments(this._film.comments);
-      const commentForm = new CommentForm();
-
-      FilmPopup.renderPopup(this.popupRenderPlace, this._element, ratingForm, commentsComponent, commentForm);
-    }
   }
 
   setPopupCloseHandler(handler) {
@@ -181,5 +173,164 @@ export default class FilmPopup extends AbstractComponent {
     this.getElement()
       .querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, handler);
+  }
+
+  setDeleteButtonClickHandler(handler) {
+    this.getElement()
+      .querySelector(`.film-details__comments-list`)
+      .addEventListener(`click`, (evt) => {
+        evt.preventDefault();
+        const target = evt.target;
+        if (target.classList.contains(`film-details__comment-delete`)) {
+          evt.target.innerText = `Deleting...`;
+          const commentElement = target.closest(`.film-details__comment`);
+          const deletedCommentId = parseInt(commentElement.dataset.commentId, 10);
+          handler(deletedCommentId);
+        }
+      });
+  }
+
+  setRatingButtonClickHandler(handler) {
+    if (this._isWatched) {
+      this.getElement()
+        .querySelector(`.film-details__user-rating-score`)
+        .addEventListener(`change`, handler);
+    }
+  }
+
+  setUndoButtonClickHandler(handler) {
+    if (this._isWatched && this._film.personalRating) {
+      this.getElement()
+        .querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, (evt) => {
+          evt.preventDefault();
+          const activeRatingMark = this.getElement().querySelector(`#rating-${this._film.personalRating}`);
+          activeRatingMark.removeAttribute(`checked`);
+
+          handler();
+        });
+    }
+  }
+
+  getFormData() {
+    const commentForm = this.getElement().querySelector(`.film-details__new-comment`);
+
+    const commentTextAreaValue = commentForm
+      .querySelector(`.film-details__comment-input`)
+      .value;
+    const encodedTextAreaValue = he.encode(commentTextAreaValue);
+    const commentEmoji = commentForm
+      .querySelector(`.film-details__add-emoji-label img`)
+      .getAttribute(`alt`);
+
+    return {encodedTextAreaValue, commentEmoji};
+  }
+
+  disableForm() {
+    const commentTextArea = this.getElement().querySelector(`.film-details__comment-input`);
+    const emojiCheckboxes = this.getElement().querySelectorAll(`.film-details__emoji-item`);
+    commentTextArea.toggleAttribute(`disabled`);
+    emojiCheckboxes.forEach((emojiCheckbox)=> {
+      emojiCheckbox.toggleAttribute(`disabled`);
+    });
+  }
+
+  toggleCommentRequestError(mode) {
+    const commentTextArea = this.getElement().querySelector(`.film-details__comment-input`);
+
+    if (mode === `show`) {
+      this.getElement().classList.add(`shake`);
+      commentTextArea.classList.add(`film-details__comment-input--error`);
+      return;
+    }
+
+    this.getElement().classList.remove(`shake`);
+    commentTextArea.classList.remove(`film-details__comment-input--error`);
+  }
+
+  hideDetailsRequestError(details) {
+    const {userDetail, disabledValue} = details;
+
+    const errorCLass = `film-details__control-label--error`;
+
+    this.getElement().classList.remove(`shake`);
+    switch (userDetail) {
+      case UserDetail.IS_IN_WATCHLIST:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--watchlist`)
+          .classList.remove(errorCLass);
+        break;
+      case UserDetail.IS_FAVORITE:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--favorite`)
+          .classList.remove(errorCLass);
+        break;
+      case UserDetail.IS_WATCHED:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--watched`)
+          .classList.remove(errorCLass);
+        break;
+      case UserDetail.PERSONAL_RATING:
+        this.getElement().querySelector(`[for=rating-${disabledValue}]`)
+          .classList.remove(`film-details__user-rating-label--error`);
+        this.getElement()
+          .querySelectorAll(`.film-details__user-rating-input`)
+          .forEach((ratingInput) => {
+            ratingInput.removeAttribute(`disabled`);
+          });
+        break;
+    }
+  }
+
+  showDetailsRequestError(details) {
+    const {userDetail, disabledValue} = details;
+    const errorCLass = `film-details__control-label--error`;
+
+    this.getElement().classList.add(`shake`);
+    switch (userDetail) {
+      case UserDetail.IS_IN_WATCHLIST:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--watchlist`)
+          .classList.add(errorCLass);
+        break;
+      case UserDetail.IS_FAVORITE:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--favorite`)
+          .classList.add(errorCLass);
+        break;
+      case UserDetail.IS_WATCHED:
+        this.getElement().querySelector(`${CONTROL_LABEL_PREFIX}--watched`)
+          .classList.add(errorCLass);
+        break;
+      case UserDetail.PERSONAL_RATING:
+        this.getElement().querySelector(`[for=rating-${disabledValue}]`)
+          .classList.add(`film-details__user-rating-label--error`);
+        this.getElement()
+          .querySelectorAll(`.film-details__user-rating-input`)
+          .forEach((ratingInput) => {
+            ratingInput.setAttribute(`disabled`, `disabled`);
+          });
+        break;
+    }
+  }
+
+  scrollToArea(control) {
+    switch (control) {
+      case UserDetail.IS_IN_WATCHLIST:
+        this.getElement().querySelector(`.film-details__controls`)
+          .scrollIntoView();
+        break;
+      case UserDetail.IS_FAVORITE:
+        this.getElement().querySelector(`.film-details__controls`)
+          .scrollIntoView();
+        break;
+      case UserDetail.IS_WATCHED:
+        this.getElement().querySelector(`.film-details__controls`)
+          .scrollIntoView();
+        break;
+      case UserDetail.PERSONAL_RATING:
+        this.getElement().querySelector(`.form-details__middle-container`)
+          .scrollIntoView();
+        break;
+      case UserDetail.COMMENT:
+        this.getElement().querySelector(`.film-details__new-comment`)
+          .scrollIntoView();
+        break;
+    }
   }
 }
