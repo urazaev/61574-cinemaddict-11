@@ -1,4 +1,4 @@
-import {INITIAL_FILTERS_STATE} from './constants';
+import {InitialFilterState} from './constants';
 
 const generateFilters = (filmsData) => {
   return filmsData.reduce((prev, film) => {
@@ -8,7 +8,7 @@ const generateFilters = (filmsData) => {
       'history': film.isWatched ? prev.history + 1 : prev.history,
       'favorites': film.isFavorite ? prev.favorites + 1 : prev.favorites,
     };
-  }, INITIAL_FILTERS_STATE);
+  }, InitialFilterState);
 };
 
 export {generateFilters};

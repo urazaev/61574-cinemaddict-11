@@ -1,0 +1,64 @@
+import moment from "moment";
+import {FilterNames, SortTypeName, SortTypeCallbacks, PeriodForMoment} from "../mocks/constants";
+import {getFilmsByFilter} from "../utilities/filter";
+
+export default class MoviesModel {
+  constructor() {
+    this._films = [];
+
+    this._activeFilterType = FilterNames.ALL;
+    this._activeSortType = SortTypeName.DEFAULT;
+    this._filterChangeHandlers = [];
+  }
+
+  getFilms() {
+    return getFilmsByFilter(this._films, this._activeFilterType)
+      .sort(SortTypeCallbacks[this._activeSortType]);
+  }
+
+  getAllFilms() {
+    return this._films;
+  }
+
+  setFilm(films) {
+    this._films = Array.from(films);
+  }
+
+  refreshFilm(id, film) {
+    const index = this._films.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
+
+    return true;
+  }
+
+  setFilter(filterType) {
+    this._activeFilterType = filterType;
+    this._filterChangeHandlers.forEach((handler) => handler());
+  }
+
+  setFilterChangeHandler(handler) {
+    this._filterChangeHandlers.push(handler);
+  }
+
+  filterFilmsByTime(period) {
+    if (period !== `all-time`) {
+      const todayDate = new Date();
+      return this.getAllFilms().slice()
+        .filter((film) => {
+          const periodDate = moment(todayDate).subtract(1, PeriodForMoment[period.toUpperCase()]);
+          return moment(film.watchingDate).isSameOrAfter(periodDate, period) && film.isWatched;
+        });
+    }
+
+    return this.getAllFilms();
+  }
+
+  setSorting(sortType) {
+    this._activeSortType = sortType;
+  }
+}

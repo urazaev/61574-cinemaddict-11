@@ -1,33 +1,77 @@
 import AbstractComponent from "./abstract-component";
-import {createFilterTemplate} from './filter-template';
 
+const createFilterTemplate = (filterItem) => {
+  const {filterName, filterCount, activeFilter} = filterItem;
 
-const createFiltersTemplate = (filters) => {
-  const filtersKey = Object.keys(filters);
+  const preparedName = filterName[0].toUpperCase() + filterName.slice(1);
 
-  return filtersKey.map((filterName) => {
-    const filterItem = [filterName, filters[filterName]];
-    return createFilterTemplate(filterItem);
+  return `
+    <a
+      href="#${filterName}"
+      class="main-navigation__item ${activeFilter === filterName && `main-navigation__item--active`}"
+      data-filter-type=${filterName}
+    >${preparedName}
+      ${filterCount ? `<span class="main-navigation__item-count">${filterCount}</span>` : ``}
+    </a>
+  `;
+};
+
+const createFiltersTemplate = (filters, activeFilter) => {
+  const filtersKeys = Object.keys(filters);
+
+  return filtersKeys.map((filterName) => {
+    const options = {
+      filterName,
+      filterCount: filters[filterName],
+      activeFilter
+    };
+    return createFilterTemplate(options);
   }).join(``);
 };
 
-const createMenuTemplate = (films, filters) => {
+const createMenuTemplate = (activeFilter, filters) => {
   return (
     `<nav class="main-navigation">
-        ${createFiltersTemplate(filters)}
+        ${createFiltersTemplate(filters, activeFilter)}
         <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
     </nav>`
   );
 };
 
 export default class Menu extends AbstractComponent {
-  constructor(films, filters) {
+  constructor(activeFilter, filters) {
     super();
-    this._films = films;
+    this._activeFilter = activeFilter;
     this._filters = filters;
   }
 
   getTemplate() {
-    return createMenuTemplate(this._films, this._filters);
+    return createMenuTemplate(this._activeFilter, this._filters);
+  }
+
+  setFilterChangeHandler(handler) {
+    this.getElement().addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      const target = evt.target;
+      this._toggleActiveClass(target);
+      const filterName = target.getAttribute(`data-filter-type`);
+      if (filterName) {
+        handler(filterName);
+      }
+    });
+  }
+
+  _toggleActiveClass(target) {
+    this.getElement()
+      .querySelector(`.main-navigation__item--active`)
+      .classList.remove(`main-navigation__item--active`);
+
+    target.classList.add(`main-navigation__item--active`);
+  }
+
+  setStatsShowHandler(handler) {
+    this.getElement()
+      .querySelector(`.main-navigation__item--additional`)
+      .addEventListener(`click`, handler);
   }
 }

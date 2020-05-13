@@ -22,13 +22,11 @@
 
 <main class="main">
   <nav class="main-navigation">
-    <div class="main-navigation__items">
-      <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-      <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
-      <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
-      <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
-    </div>
-    <a href="#stats" class="main-navigation__additional">Stats</a>
+    <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
+    <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">13</span></a>
+    <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">4</span></a>
+    <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">8</span></a>
+    <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>
   </nav>
 
   <ul class="sort">
@@ -314,7 +312,7 @@
         <ul class="film-details__comments-list">
           <li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji-smile">
+              <img src="./images/emoji/smile.png" width="55" height="55" alt="emoji">
             </span>
             <div>
               <p class="film-details__comment-text">Interesting setting and a good cast</p>
@@ -327,7 +325,7 @@
           </li>
           <li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji-sleeping">
+              <img src="./images/emoji/sleeping.png" width="55" height="55" alt="emoji">
             </span>
             <div>
               <p class="film-details__comment-text">Booooooooooring</p>
@@ -340,7 +338,7 @@
           </li>
           <li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji-puke">
+              <img src="./images/emoji/puke.png" width="55" height="55" alt="emoji">
             </span>
             <div>
               <p class="film-details__comment-text">Very very old. Meh</p>
@@ -353,7 +351,7 @@
           </li>
           <li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji-angry">
+              <img src="./images/emoji/angry.png" width="55" height="55" alt="emoji">
             </span>
             <div>
               <p class="film-details__comment-text">Almost two hours? Seriously?</p>
@@ -374,22 +372,22 @@
           </label>
 
           <div class="film-details__emoji-list">
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="sleeping">
             <label class="film-details__emoji-label" for="emoji-smile">
               <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="neutral-face">
             <label class="film-details__emoji-label" for="emoji-sleeping">
               <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-            <label class="film-details__emoji-label" for="emoji-puke">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="grinning">
+            <label class="film-details__emoji-label" for="emoji-gpuke">
               <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
             </label>
 
-            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="grinning">
             <label class="film-details__emoji-label" for="emoji-angry">
               <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
             </label>
